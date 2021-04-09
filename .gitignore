@@ -2,6 +2,7 @@
 
 .idea
 log
+dist
 
 # dependencies
 /node_modules
