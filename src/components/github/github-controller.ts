@@ -21,6 +21,7 @@ export class GithubController implements IGithubController {
                 res.status(200).json({});
             } catch(err) {
                 error(err);
+                res.status(500).json({});
             }
         });
         app.use(ApiResource.GITHUB, router);
