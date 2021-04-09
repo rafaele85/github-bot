@@ -3,12 +3,12 @@ import http from "http";
 import {debug, error} from "../shared/utils/log";
 import morgan from "morgan";
 import {GithubService} from "../github/service/github-service";
-import {ChatController} from "../chat-service/chat-controller";
+import {ChatController} from "../chat/chat-controller";
 import {GithubController} from "../github/github-controller";
 import {AppConfig} from "./config";
-import {ChatService} from "../chat-service/chat-service";
+import {ChatService} from "../chat/chat-service";
 import {NotificationService} from "../shared/services/notification";
-import {IChatService} from "../chat-service/chat-service-types";
+import {IChatService} from "../chat/chat-service-types";
 import {IGithubController} from "../github/github-types";
 import {EventParser} from "../github/service/event-parser";
 

@@ -1,13 +1,13 @@
 import {AppConfig} from "../components/main/config";
-import {IChatService} from "../components/chat-service/chat-service-types";
+import {IChatService} from "../components/chat/chat-service-types";
 import {debug, error, log} from "../components/shared/utils/log";
 import {GithubService} from "../components/github/service/github-service";
 import {EventParser} from "../components/github/service/event-parser";
-import {ChatService} from "../components/chat-service/chat-service";
+import {ChatService} from "../components/chat/chat-service";
 import {NotificationService} from "../components/shared/services/notification";
 import express from "express";
 import {MockGithubController} from "../components/github/mock-github-controller";
-import {IChatTestResult, MockChatController} from "../components/chat-service/mock-chat-controller";
+import {IChatTestResult, MockChatController} from "../components/chat/mock-chat-controller";
 import {TestStorage} from "../components/shared/interfaces/test";
 import {testFixtures} from "./test-fixtures";
 import {IGithubEventPayload} from "../components/github/github-types";

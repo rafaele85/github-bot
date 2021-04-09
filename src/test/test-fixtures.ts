@@ -1,5 +1,5 @@
 import {AppConfig} from "../components/main/config";
-import {NewMessageInput} from "../components/chat-service/schema/generated/graphql";
+import {NewMessageInput} from "../components/chat/schema/generated/graphql";
 
 const inputPush1: [NewMessageInput] =
     [
