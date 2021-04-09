@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MockPpldoController = void 0;
+exports.MockChatController = void 0;
 const log_1 = require("../shared/utils/log");
 const graphql_request_1 = require("graphql-request");
 const test_1 = require("../shared/interfaces/test");
-class MockPpldoController {
+class MockChatController {
     constructor(config) {
         this.config = config;
         log_1.debug("ChatController: started");
@@ -21,12 +21,12 @@ class MockPpldoController {
                 }
             }
         `;
-        log_1.debug(`Sending ${message} to ppldo service`);
+        log_1.debug(`Sending ${message} to chat service`);
         try {
             const newTextMessageInput = { message };
             const newMessageInput = { text_message: newTextMessageInput };
-            const vars = { chat_id: this.config.pplDoChatId(), input: [newMessageInput] };
-            const headers = { Authorization: `Bearer ${this.config.pplDoApiToken()}` };
+            const vars = { chat_id: this.config.chatId(), input: [newMessageInput] };
+            const headers = { Authorization: `Bearer ${this.config.chatApiToken()}` };
             const res = { query, vars, headers };
             test_1.TestStorage.instance().setTestResult(res);
         }
@@ -35,8 +35,8 @@ class MockPpldoController {
         }
     }
 }
-exports.MockPpldoController = MockPpldoController;
+exports.MockChatController = MockChatController;
 /*
 {text_message: {message}};
  */
-//# sourceMappingURL=mock-ppldo-controller.js.map
+//# sourceMappingURL=mock-chat-controller.js.map

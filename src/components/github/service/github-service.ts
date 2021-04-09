@@ -1,7 +1,7 @@
-import {GITHUB_EVENT, IEventParser, IGithubEventPayload, IGithubEventService} from "../github";
+import {GITHUB_EVENT, IEventParser, IGithubEventPayload, IGithubEventService} from "../github-types";
 import {debug, error} from "../../shared/utils/log";
 import {INotificationService} from "../../shared/interfaces/event";
-import {AppConfig} from "../../../config";
+import {AppConfig} from "../../main/config";
 
 /**
  * Отвечает за прием запросов GithubController, и их обработку
@@ -31,7 +31,7 @@ export class GithubService implements IGithubEventService {
     public async handleEvent(payload: IGithubEventPayload) {
         const message = this.parser.parseEvent(payload);
         try {
-            this.notification.notify(GITHUB_EVENT, message);
+            await this.notification.notify(GITHUB_EVENT, message);
         } catch(err) {
             error(err);
         }

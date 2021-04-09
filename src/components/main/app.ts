@@ -1,16 +1,16 @@
 import express from "express";
 import http from "http";
-import {debug, error, log} from "./components/shared/utils/log";
+import {debug, error} from "../shared/utils/log";
 import morgan from "morgan";
-import {GithubService} from "./components/github/service/github-service";
-import {PpldoController} from "./components/chat-service/ppldo-controller";
-import {GithubController} from "./components/github/github-controller";
+import {GithubService} from "../github/service/github-service";
+import {ChatController} from "../chat-service/chat-controller";
+import {GithubController} from "../github/github-controller";
 import {AppConfig} from "./config";
-import {PpldoService} from "./components/chat-service/ppldo-service";
-import {NotificationService} from "./components/shared/services/notification";
-import {IPppldoService} from "./components/chat-service/ppldo";
-import {IGithubController} from "./components/github/github";
-import {EventParser} from "./components/github/service/event-parser";
+import {ChatService} from "../chat-service/chat-service";
+import {NotificationService} from "../shared/services/notification";
+import {IChatService} from "../chat-service/chat-service-types";
+import {IGithubController} from "../github/github-types";
+import {EventParser} from "../github/service/event-parser";
 
 
 /**
@@ -22,7 +22,7 @@ export class App {
 
     private config: AppConfig;
     private app: express.Application;
-    private pplDoService: IPppldoService;
+    private chatService: IChatService;
     private githubController: IGithubController;
 
     /**
@@ -42,8 +42,8 @@ export class App {
 
         const notification = new NotificationService();
 
-        const pplDoController = new PpldoController(config);
-        this.pplDoService = new PpldoService(notification, pplDoController);
+        const chatController = new ChatController(config);
+        this.chatService = new ChatService(notification, chatController);
 
         const eventParser = new EventParser(config)
         const githubService = new GithubService(config, eventParser, notification);

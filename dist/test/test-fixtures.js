@@ -179,10 +179,10 @@ const testFixtures = (config) => [
                 }
             }
             `,
-            vars: { chat_id: config.pplDoChatId(),
+            vars: { chat_id: config.chatId(),
                 input: inputPush1
             },
-            headers: { Authorization: "Bearer " + config.pplDoApiToken() }
+            headers: { Authorization: "Bearer " + config.chatApiToken() }
         },
     }
 ];

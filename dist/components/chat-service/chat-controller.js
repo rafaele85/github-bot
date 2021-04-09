@@ -1,21 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PpldoController = void 0;
+exports.ChatController = void 0;
 const graphql_request_1 = require("graphql-request");
 const log_1 = require("../shared/utils/log");
 /**
- * Отвечает за отправку сообщений в чат PPLDO через GraphQL API PPLDO
+ * Отвечает за отправку сообщений в чат через GraphQL API
  * Сообщения для отправки приходят из ChatService
  * Параметры API конфигурируются в .env: строка url, токен
  * При успешной отправке получает на выходе node id, с которым ничего не делает, просто выводит в лог
  * При ошибке отправки выводит в лог сообщение об ошибке.
- * TODO: реализовать надежную доставку сообщений (с конфигурированием количества попыток и интервала между ними)
  */
-class PpldoController {
+class ChatController {
     constructor(config) {
         this.config = config;
-        const headers = { Bearer: this.config.pplDoApiToken() };
-        this.client = new graphql_request_1.GraphQLClient(config.pplDoApiUrl(), { headers });
+        const headers = { Bearer: this.config.chatApiToken() };
+        this.client = new graphql_request_1.GraphQLClient(config.chatApiUrl(), { headers });
         log_1.debug("ChatController: started");
     }
     async sendMessage(message) {
@@ -30,12 +29,12 @@ class PpldoController {
                 }
             }
         `;
-        log_1.debug(`Sending ${message} to ppldo service`);
+        log_1.debug(`Sending ${message} to chat service`);
         try {
             const newTextMessageInput = { message };
             const newMessageInput = { text_message: newTextMessageInput };
-            const vars = { chat_id: this.config.pplDoChatId(), input: [newMessageInput] };
-            const headers = { Authorization: `Bearer ${this.config.pplDoApiToken()}` };
+            const vars = { chat_id: this.config.chatId(), input: [newMessageInput] };
+            const headers = { Authorization: `Bearer ${this.config.chatApiToken()}` };
             const res = await this.client.request(query, vars, headers);
             log_1.debug(`res=`, res);
         }
@@ -44,5 +43,5 @@ class PpldoController {
         }
     }
 }
-exports.PpldoController = PpldoController;
-//# sourceMappingURL=ppldo-controller.js.map
+exports.ChatController = ChatController;
+//# sourceMappingURL=chat-controller.js.map

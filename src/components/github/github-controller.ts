@@ -1,6 +1,6 @@
 import express, {NextFunction, Request, Response} from "express";
 import {ApiResource} from "../shared/interfaces/api-resource";
-import {GithubResource, IGithubController, IGithubEventService} from "./github";
+import {GithubResource, IGithubController, IGithubEventService} from "./github-types";
 import {debug, error} from "../shared/utils/log";
 
 /**

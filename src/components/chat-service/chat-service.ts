@@ -1,22 +1,22 @@
-import {IpplDoController, IPppldoService} from "./ppldo";
+import {IChatController, IChatService} from "./chat-service-types";
 import {ALL_EVENTS, IEvent, IEventHandlerId, IEventPayload, INotificationService} from "../shared/interfaces/event";
 import {debug, error} from "../shared/utils/log";
 
 /**
- * Получает события через NotificationService и вызывает PplDoCOntroller для отправки сообщений в чат
+ * Получает события через NotificationService и вызывает ChatController для отправки сообщений в чат
  */
-export class PpldoService implements IPppldoService {
+export class ChatService implements IChatService {
     private notification: INotificationService;
-    private controller: IpplDoController;
+    private controller: IChatController;
     private handlerId: IEventHandlerId;
 
-    public constructor(notification: INotificationService, controller: IpplDoController) {
+    public constructor(notification: INotificationService, controller: IChatController) {
         this.controller=controller;
         this.notification = notification;
         this.handlerId = this.notification.subscribe(ALL_EVENTS,
             (event: IEvent, payload: IEventPayload) => this.handleEvent(event, payload)
         );
-        debug("PpldoService: started");
+        debug("ChatService: started");
     }
 
     /**
@@ -38,7 +38,7 @@ export class PpldoService implements IPppldoService {
     protected async handleEvent(event: IEvent, payload: IEventPayload) {
         const message = this.getEventNotificationMessage(event, payload)
         try {
-            this.controller.sendMessage(message);
+            await this.controller.sendMessage(message);
         } catch(err) {
             error(err);
         }

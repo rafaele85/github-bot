@@ -1,13 +1,13 @@
 /**
- * интерфейс сервиса Ppldo
+ * интерфейс сервиса ChatService
  */
-export interface IPppldoService {
+export interface IChatService {
 }
 
 /**
- * Интерфейс контроллера Ppldo
+ * Интерфейс контроллера Chat
  */
-export interface IpplDoController {
+export interface IChatController {
     /**
      * функция отправки указанного сообщения в чат через API
      * @param message полная строка сообщения

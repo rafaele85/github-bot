@@ -1,4 +1,4 @@
-import {IGithubController, IGithubEventPayload, IGithubEventService} from "./github";
+import {IGithubController, IGithubEventPayload, IGithubEventService} from "./github-types";
 import {debug, error} from "../shared/utils/log";
 import express from "express";
 import {ITestable} from "../shared/interfaces/test";

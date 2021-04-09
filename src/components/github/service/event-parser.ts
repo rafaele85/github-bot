@@ -1,5 +1,5 @@
-import {IGithubCommit, IGithubEventPayload, IGithubPushDate} from "../github";
-import {AppConfig} from "../../../config";
+import {IGithubCommit, IGithubEventPayload, IGithubPushDate} from "../github-types";
+import {AppConfig} from "../../main/config";
 
 
 /**
@@ -92,7 +92,7 @@ export class EventParser {
 
     /**
      * Преобразует дату из строки в локализованное представление
-     * @param githubPushTs дата/время в виде строки, как они получены в запросе
+     * @param githubTs дата/время в виде строки, как они получены в запросе
      * @return локализованная строка дата/время
      * @protected
      */

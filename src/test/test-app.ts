@@ -1,36 +1,36 @@
-import {AppConfig} from "../config";
-import {IPppldoService} from "../components/chat-service/ppldo";
+import {AppConfig} from "../components/main/config";
+import {IChatService} from "../components/chat-service/chat-service-types";
 import {debug, error, log} from "../components/shared/utils/log";
 import {GithubService} from "../components/github/service/github-service";
 import {EventParser} from "../components/github/service/event-parser";
-import {PpldoService} from "../components/chat-service/ppldo-service";
+import {ChatService} from "../components/chat-service/chat-service";
 import {NotificationService} from "../components/shared/services/notification";
 import express from "express";
 import {MockGithubController} from "../components/github/mock-github-controller";
-import {IPpplDoTestResult, MockPpldoController} from "../components/chat-service/mock-ppldo-controller";
+import {IChatTestResult, MockChatController} from "../components/chat-service/mock-chat-controller";
 import {TestStorage} from "../components/shared/interfaces/test";
 import {testFixtures} from "./test-fixtures";
-import {IGithubEventPayload} from "../components/github/github";
+import {IGithubEventPayload} from "../components/github/github-types";
 
 type ITestFixture = {
     githubData: IGithubEventPayload;
-    result: IPpplDoTestResult;
+    result: IChatTestResult;
 }
 
 export class TestApp {
 
-    private config: AppConfig;
-    private pplDoService: IPppldoService;
+    private readonly config: AppConfig;
+    private chatService: IChatService;
     private githubController: MockGithubController;
-    private app: express.Application;
+    private readonly app: express.Application;
 
     public constructor(config: AppConfig) {
         this.config = config;
         const notification = new NotificationService();
         this.app = express();
 
-        const pplDoController = new MockPpldoController(config);
-        this.pplDoService = new PpldoService(notification, pplDoController);
+        const chatController = new MockChatController(config);
+        this.chatService = new ChatService(notification, chatController);
 
         const eventParser = new EventParser(config)
         const githubService = new GithubService(config, eventParser, notification);
@@ -39,8 +39,8 @@ export class TestApp {
         debug("App: initialized");
     }
 
-    protected checkTestResult(expected: IPpplDoTestResult) {
-        const result = TestStorage.instance().getTestResult() as IPpplDoTestResult;
+    protected checkTestResult(expected: IChatTestResult) {
+        const result = TestStorage.instance().getTestResult() as IChatTestResult;
         if(!result) {
             throw Error("It should produce result: FAILED")
         } else {
@@ -88,10 +88,11 @@ export class TestApp {
 
     }
 
-    public runSuite() {
+    public async runSuite() {
         const fixtures = testFixtures(this.config)
         for(let fixture of fixtures) {
-            this.test(fixture);
+            TestStorage.instance().reset();
+            await this.test(fixture);
         }
     }
 }

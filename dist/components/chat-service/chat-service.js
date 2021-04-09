@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PpldoService = void 0;
+exports.ChatService = void 0;
 const event_1 = require("../shared/interfaces/event");
 const log_1 = require("../shared/utils/log");
 /**
- * Получает события через NotificationService и вызывает PplDoCOntroller для отправки сообщений в чат
+ * Получает события через NotificationService и вызывает ChatController для отправки сообщений в чат
  */
-class PpldoService {
+class ChatService {
     constructor(notification, controller) {
         this.controller = controller;
         this.notification = notification;
@@ -31,12 +31,12 @@ class PpldoService {
     async handleEvent(event, payload) {
         const message = this.getEventNotificationMessage(event, payload);
         try {
-            this.controller.sendMessage(message);
+            await this.controller.sendMessage(message);
         }
         catch (err) {
             log_1.error(err);
         }
     }
 }
-exports.PpldoService = PpldoService;
-//# sourceMappingURL=ppldo-service.js.map
+exports.ChatService = ChatService;
+//# sourceMappingURL=chat-service.js.map

@@ -1,4 +1,4 @@
-import {AppConfig} from "../config";
+import {AppConfig} from "../components/main/config";
 import {NewMessageInput} from "../components/chat-service/schema/generated/graphql";
 
 const inputPush1: [NewMessageInput] =
@@ -215,10 +215,10 @@ export const testFixtures = (config: AppConfig) =>  [
                 }
             }
             `,
-            vars: {chat_id: config.pplDoChatId(),
+            vars: {chat_id: config.chatId(),
                    input: inputPush1
             },
-            headers: {Authorization: "Bearer "+config.pplDoApiToken()}
+            headers: {Authorization: "Bearer "+config.chatApiToken()}
         },
     }
 ];

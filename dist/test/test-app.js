@@ -4,15 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TestApp = void 0;
-const config_1 = require("../config");
+const config_1 = require("../components/main/config");
 const log_1 = require("../components/shared/utils/log");
 const github_service_1 = require("../components/github/service/github-service");
 const event_parser_1 = require("../components/github/service/event-parser");
-const ppldo_service_1 = require("../components/chat-service/ppldo-service");
+const chat_service_1 = require("../components/chat-service/chat-service");
 const notification_1 = require("../components/shared/services/notification");
 const express_1 = __importDefault(require("express"));
 const mock_github_controller_1 = require("../components/github/mock-github-controller");
-const mock_ppldo_controller_1 = require("../components/chat-service/mock-ppldo-controller");
+const mock_chat_controller_1 = require("../components/chat-service/mock-chat-controller");
 const test_1 = require("../components/shared/interfaces/test");
 const test_fixtures_1 = require("./test-fixtures");
 class TestApp {
@@ -20,8 +20,8 @@ class TestApp {
         this.config = config;
         const notification = new notification_1.NotificationService();
         this.app = express_1.default();
-        const pplDoController = new mock_ppldo_controller_1.MockPpldoController(config);
-        this.pplDoService = new ppldo_service_1.PpldoService(notification, pplDoController);
+        const chatController = new mock_chat_controller_1.MockChatController(config);
+        this.chatService = new chat_service_1.ChatService(notification, chatController);
         const eventParser = new event_parser_1.EventParser(config);
         const githubService = new github_service_1.GithubService(config, eventParser, notification);
         this.githubController = new mock_github_controller_1.MockGithubController(this.app, githubService);
@@ -80,10 +80,11 @@ class TestApp {
             log_1.error(err);
         }
     }
-    runSuite() {
+    async runSuite() {
         const fixtures = test_fixtures_1.testFixtures(this.config);
         for (let fixture of fixtures) {
-            this.test(fixture);
+            test_1.TestStorage.instance().reset();
+            await this.test(fixture);
         }
     }
 }

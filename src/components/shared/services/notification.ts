@@ -11,7 +11,7 @@ import {uuid} from "../utils/uuid";
 import {error, warn} from "../utils/log";
 
 /**
- * Служит посредником для развязки между различными модулями (в частности между service интерфейсом и ppldo интерфейсом)
+ * Служит посредником для развязки между различными модулями (в частности между service интерфейсом и chat интерфейсом)
  * Реализует подписку на события и вызов callback при наступлении события вызывает callback функцию зарегистрированного подписчика
  *
  */
@@ -55,7 +55,7 @@ export class NotificationService implements INotificationService{
 
     public async notify(event: IEvent, eventData: IEventPayload) {
         try {
-            Promise.all([
+            await Promise.all([
                 this.notifyEvent(event, eventData),
                 this.notifyEvent(ALL_EVENTS, eventData)
             ]);
@@ -77,7 +77,7 @@ export class NotificationService implements INotificationService{
             warn("No handlers found for event", event);
             return;
         }
-        await handlers.forEach((handler) => {
+        handlers.forEach((handler: IEventHandler) => {
             try {
                 handler(event, eventData);
             } catch(err) {

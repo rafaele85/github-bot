@@ -5,7 +5,7 @@ const event_1 = require("../interfaces/event");
 const uuid_1 = require("../utils/uuid");
 const log_1 = require("../utils/log");
 /**
- * Служит посредником для развязки между различными модулями (в частности между service интерфейсом и ppldo интерфейсом)
+ * Служит посредником для развязки между различными модулями (в частности между service интерфейсом и chat интерфейсом)
  * Реализует подписку на события и вызов callback при наступлении события вызывает callback функцию зарегистрированного подписчика
  *
  */
@@ -47,7 +47,7 @@ class NotificationService {
      */
     async notify(event, eventData) {
         try {
-            Promise.all([
+            await Promise.all([
                 this.notifyEvent(event, eventData),
                 this.notifyEvent(event_1.ALL_EVENTS, eventData)
             ]);
@@ -68,7 +68,7 @@ class NotificationService {
             log_1.warn("No handlers found for event", event);
             return;
         }
-        await handlers.forEach((handler) => {
+        handlers.forEach((handler) => {
             try {
                 handler(event, eventData);
             }

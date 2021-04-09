@@ -1,20 +1,20 @@
-import {IpplDoController} from "./ppldo";
-import {AppConfig} from "../../config";
+import {IChatController} from "./chat-service-types";
+import {AppConfig} from "../main/config";
 import {debug, error} from "../shared/utils/log";
 import {gql} from "graphql-request";
 import {NewMessageInput, NewTextMessageInput} from "./schema/generated/graphql";
-import {ISendMessagePayload} from "./ppldo-controller";
+import {ISendMessagePayload} from "./chat-controller";
 import {TestStorage} from "../shared/interfaces/test";
 
-export type IPPlDoHeaders = {Authorization: string} ;
-export type IPpplDoTestResult = {query: string, vars: ISendMessagePayload, headers: IPPlDoHeaders};
+export type IChatHeaders = {Authorization: string} ;
+export type IChatTestResult = {query: string, vars: ISendMessagePayload, headers: IChatHeaders};
 
-export class MockPpldoController implements IpplDoController {
+export class MockChatController implements IChatController {
 
     private config: AppConfig;
     public constructor(config: AppConfig) {
         this.config = config;
-        debug("PpldoController: started");
+        debug("ChatController: started");
     }
 
     public async sendMessage(message: string) {
@@ -29,13 +29,13 @@ export class MockPpldoController implements IpplDoController {
                 }
             }
         `;
-        debug(`Sending ${message} to ppldo service`);
+        debug(`Sending ${message} to chat service`);
         try {
             const newTextMessageInput: NewTextMessageInput = {message};
             const newMessageInput: NewMessageInput = {text_message: newTextMessageInput};
-            const vars: ISendMessagePayload = {chat_id: this.config.pplDoChatId(), input: [newMessageInput]}
-            const headers: IPPlDoHeaders = {Authorization: `Bearer ${this.config.pplDoApiToken()}`} ;
-            const res: IPpplDoTestResult = {query, vars, headers};
+            const vars: ISendMessagePayload = {chat_id: this.config.chatId(), input: [newMessageInput]}
+            const headers: IChatHeaders = {Authorization: `Bearer ${this.config.chatApiToken()}`} ;
+            const res: IChatTestResult = {query, vars, headers};
             TestStorage.instance().setTestResult(res);
 
         } catch (err) {

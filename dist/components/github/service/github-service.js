@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GithubService = void 0;
-const github_1 = require("../github");
+const github_types_1 = require("../github-types");
 const log_1 = require("../../shared/utils/log");
 /**
  * Отвечает за прием запросов GithubController, и их обработку
@@ -25,7 +25,7 @@ class GithubService {
     async handleEvent(payload) {
         const message = this.parser.parseEvent(payload);
         try {
-            this.notification.notify(github_1.GITHUB_EVENT, message);
+            await this.notification.notify(github_types_1.GITHUB_EVENT, message);
         }
         catch (err) {
             log_1.error(err);
