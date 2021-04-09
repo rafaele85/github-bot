@@ -14,10 +14,11 @@ export class GithubController implements IGithubController {
     public constructor(app: express.Application, service: IGithubEventService) {
         this.service = service;
         const router = express.Router();
-        router.post(GithubResource.EVENT, async (req: Request, _res: Response, _next: NextFunction) => {
+        router.post(GithubResource.EVENT, async (req: Request, res: Response, _next: NextFunction) => {
             debug(`router.post ${GithubResource.EVENT} req.body=`, req.body)
             try {
                 await this.service.handleEvent(req.body);
+                res.status(200).json({});
             } catch(err) {
                 error(err);
             }
