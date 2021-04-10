@@ -1,1 +1,1 @@
-web: node ./dist/components/main/app.js
+web: node dist/components/main/app.js
