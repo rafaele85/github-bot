@@ -61,7 +61,7 @@ ID чата можно получить из query { chats... } или из ад
 Перейдите в ваш GitHub репозиторий и выберите Настройки (Settings)
 Выберите Add webhook в меню Webhooks.
 Введите ваш webhook url, по которому сконфигурирован github controller (полностью строчку url с http://.... и номер порта если не стандартный)
-Укажите секртеный ключ (Secret)
+Укажите секретный ключ (Secret)
 Выберите Content-Type Application/Json
 Выберите все события ( Send me everything. ).
 
