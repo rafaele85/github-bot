@@ -11,6 +11,7 @@ import {NotificationService} from "../shared/services/notification";
 import {IChatService} from "../chat/chat-service-types";
 import {IGithubController} from "../github/github-types";
 import {EventParser} from "../github/service/event-parser";
+import {GraphQLChatClient} from "../chat/graphql-chat-client";
 
 
 /**
@@ -21,7 +22,7 @@ import {EventParser} from "../github/service/event-parser";
 export class App {
 
     private config: AppConfig;
-    private app: express.Application;
+    private readonly app: express.Application;
     private chatService: IChatService;
     private githubController: IGithubController;
 
@@ -42,7 +43,8 @@ export class App {
 
         const notification = new NotificationService();
 
-        const chatController = new ChatController(config);
+        const graphQLChatClient = new GraphQLChatClient(config.chatApiUrl())
+        const chatController = new ChatController(config, graphQLChatClient);
         this.chatService = new ChatService(notification, chatController);
 
         const eventParser = new EventParser(config)

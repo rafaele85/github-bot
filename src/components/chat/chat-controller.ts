@@ -1,13 +1,11 @@
-import {GraphQLClient, gql} from 'graphql-request'
+import {gql} from 'graphql-request'
 import {AppConfig} from "../main/config";
-import {IChatId, IMessageId, IChatController} from "./chat-service-types";
+import {IMessageId, IChatController} from "./chat-service-types";
 import {debug, error} from "../shared/utils/log";
 import {NewMessageInput, NewTextMessageInput} from "./schema/generated/graphql";
+import {IGraphQLClient} from "../shared/interfaces/graphql-client";
+import {ISendMessagePayload} from "./chat-interface";
 
-export type ISendMessagePayload = {
-    chat_id: IChatId,
-    input: [NewMessageInput];
-}
 
 /**
  * Отвечает за отправку сообщений в чат через GraphQL API
@@ -18,13 +16,14 @@ export type ISendMessagePayload = {
  */
 export class ChatController implements IChatController {
 
-    private client: GraphQLClient;
     private config: AppConfig;
+    private client: IGraphQLClient<IMessageId, ISendMessagePayload>;
 
-    public constructor(config: AppConfig) {
+    public constructor(config: AppConfig, client: IGraphQLClient<IMessageId, ISendMessagePayload>) {
         this.config = config;
-        const headers = {Bearer: this.config.chatApiToken()};
-        this.client = new GraphQLClient(config.chatApiUrl(), {headers});
+        this.client = client;
+        //const headers = {Bearer: this.config.chatApiToken()};
+        //this.client = new GraphQLClient(config.chatApiUrl());
         debug("ChatController: started");
     }
 
@@ -46,7 +45,8 @@ export class ChatController implements IChatController {
             const newMessageInput: NewMessageInput = {text_message: newTextMessageInput};
             const vars: ISendMessagePayload = {chat_id: this.config.chatId(), input: [newMessageInput]}
             const headers = {Authorization: `Bearer ${this.config.chatApiToken()}`} ;
-            const res = await this.client.request<IMessageId, ISendMessagePayload>(query, vars, headers);
+            //const res = await this.client.request<IMessageId, ISendMessagePayload>(query, vars, headers);
+            const res = await this.client.request(query, vars, headers);
             debug(`res=`, res)
         } catch (err) {
             error(err);

@@ -1,15 +1,11 @@
-import {AppConfig} from "../components/main/config";
-import {NewMessageInput} from "../components/chat/schema/generated/graphql";
+import {AppConfig} from "../config";
+import {NewMessageInput} from "../../chat/schema/generated/graphql";
 
-const inputPush1: [NewMessageInput] =
-    [
-        { text_message: {message: "08.04.2021 21:05:44: johnsmith выполнил push в репозиторий github-bot коммиты: [ John Smith: \"исправление форматирования сообщения\" ]"} }
-    ];
+const inputPush1: [NewMessageInput] = [
+    { text_message: {message: "08.04.2021 21:05:44: johnsmith выполнил push в репозиторий github-bot коммиты: [ John Smith: \"исправление форматирования сообщения\" ]"} }
+];
 
-
-
-export const testFixtures = (config: AppConfig) =>  [
-    {
+export const testFixturePush1 = (config: AppConfig) =>  ({
         githubData: {
             ref: 'refs/heads/master',
             before: '3fd4274f372dc1c05a8b7e020d2fe90da17dd807',
@@ -221,8 +217,7 @@ export const testFixtures = (config: AppConfig) =>  [
             headers: {Authorization: "Bearer "+config.chatApiToken()}
         },
     }
-];
-
+);
 
 
 
