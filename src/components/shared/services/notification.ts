@@ -2,13 +2,11 @@ import {
     ALL_EVENTS,
     IEvent,
     IEventHandler,
-    IEventHandlerId,
-    IEventHandlers,
     IEventPayload,
     INotificationService
 } from "../interfaces/event";
-import {uuid} from "../utils/uuid";
-import {error, warn} from "../utils/log";
+import {debug, error} from "../utils/log";
+import EventEmitter from "events";
 
 /**
  * Служит посредником для развязки между различными модулями (в частности между service интерфейсом и chat интерфейсом)
@@ -16,35 +14,28 @@ import {error, warn} from "../utils/log";
  *
  */
 export class NotificationService implements INotificationService{
-    private eventHandlers = new Map<string, IEventHandlers>();
+
+    private emitter;
+    constructor() {
+        this.emitter = new EventEmitter({captureRejections: true});
+    }
 
     /**
      * Функция подписки на событие. Для подписки необходимо передать имя события , на которое подписываемся и колбек функцию обработчика события
      * @param event имя события. Если передать в качестве имени ALL_EVENTS, то будет подписка на любые события
      * @param handler колбек функция которая вызывается при наступлении события
-     * @return возвращает handlerId - уникальный ID подписчика. По этому ID можно потом удалить подписку , вызвав unsubscribe
      */
     public subscribe(event: IEvent, handler: IEventHandler) {
-        const handlerId = uuid();
-        const handlers = this.eventHandlers.get(event) || new Map<IEventHandlerId, IEventHandler>();
-        handlers.set(handlerId, handler);
-        this.eventHandlers.set(event, handlers);
-        return handlerId;
+        this.emitter.addListener(event, handler);
     }
 
     /**
      * Функция отписки от события
      * @param event - событие, от которого отписываемся
-     * @param handlerId  - ID обработчика, которое было присвоено при подписке
+     * @param handler - ссылка на callback функцию обработчика, которую передавали при подписке
      */
-    public unsubscribe(event: IEvent, handlerId: IEventHandlerId) {
-        const handlers = this.eventHandlers.get(event);
-        if(handlers) {
-            handlers.delete(handlerId)
-            if(handlers.size===0) {
-                this.eventHandlers.delete(event);
-            }
-        }
+    public unsubscribe(event: IEvent, handler: IEventHandler) {
+        this.emitter.removeListener(event, handler);
     }
 
     /**
@@ -72,18 +63,12 @@ export class NotificationService implements INotificationService{
      */
 
     protected async notifyEvent(event: IEvent, eventData: IEventPayload) {
-        const handlers = this.eventHandlers.get(event);
-        if(!handlers) {
-            warn("No handlers found for event", event);
-            return;
-        }
-        handlers.forEach((handler: IEventHandler) => {
-            try {
-                handler(event, eventData);
-            } catch(err) {
-                error(err);
-            }
-        });
+
+        const payload = [event, eventData];
+        debug(`emitter emit event=${event} payload=`, payload)
+        const result = this.emitter.emit(event, ...payload);
+
+        debug("emitter event result=", result);
     }
 
 }

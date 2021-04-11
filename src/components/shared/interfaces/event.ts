@@ -17,16 +17,6 @@ export type IEventPayload = any;
 export type IEventHandler = (event: IEvent, payload: IEventPayload) => Promise<void>;
 
 /**
- * ID присвоенный обработчику при его регистрации
- */
-export type IEventHandlerId = string;
-
-/**
- * Список обработчиков для одного события
- */
-export type IEventHandlers = Map<IEventHandlerId, IEventHandler>;
-
-/**
  * Интерфейс брокера событий
  */
 
@@ -35,16 +25,15 @@ export interface INotificationService {
      * Регистрация обработчика
      * @param event имя события
      * @param handler callback функция обработчика
-     * @return уникальный идентификатор, присвоенный обработчику при регистрации. Используется для последующего удаления обработчика в unsubscribe
      */
-    subscribe(event: IEvent, handler: IEventHandler): IEventHandlerId;
+    subscribe(event: IEvent, handler: IEventHandler): void;
 
     /**
      * Удаление обработчика
      * @param event имя события
-     * @param handlerId уникальный идентификатор, присвоенный обработчику при регистрации
+     * @param handler ссылка на callback функцию обработчика, которую передавали когда регистрировали обработчик
      */
-    unsubscribe(event: IEvent, handlerId: IEventHandlerId): void;
+    unsubscribe(event: IEvent, handler: IEventHandler): void;
 
     /**
      * Вызов обработчиков при наступлении события

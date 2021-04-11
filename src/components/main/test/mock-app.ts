@@ -1,6 +1,6 @@
 import {AppConfig} from "../config";
 import {IChatService} from "../../chat/chat-service-types";
-import {debug, error, log} from "../../shared/utils/log";
+import {debug, error} from "../../shared/utils/log";
 import {GithubService} from "../../github/service/github-service";
 import {EventParser} from "../../github/service/event-parser";
 import {ChatService} from "../../chat/chat-service";
@@ -9,8 +9,6 @@ import express from "express";
 import {MockGithubController} from "../../github/mock-github-controller";
 import {IChatTestResult} from "../../chat/test/mock-chat-controller";
 import {IGithubEventPayload} from "../../github/github-types";
-import {expect} from "chai";
-import {describe} from "mocha";
 import {ChatController} from "../../chat/chat-controller";
 import {MockGraphQLChatClient} from "../../chat/test/mock-graphql-chat-client";
 

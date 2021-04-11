@@ -1,6 +1,6 @@
 import {IChatController, IChatService} from "./chat-service-types";
-import {ALL_EVENTS, IEvent, IEventHandlerId, IEventPayload, INotificationService} from "../shared/interfaces/event";
-import {debug, error} from "../shared/utils/log";
+import {ALL_EVENTS, IEvent, IEventPayload, INotificationService} from "../shared/interfaces/event";
+import {debug, error, log} from "../shared/utils/log";
 
 /**
  * Получает события через NotificationService и вызывает ChatController для отправки сообщений в чат
@@ -8,12 +8,11 @@ import {debug, error} from "../shared/utils/log";
 export class ChatService implements IChatService {
     private notification: INotificationService;
     private controller: IChatController;
-    private handlerId: IEventHandlerId;
 
     public constructor(notification: INotificationService, controller: IChatController) {
         this.controller=controller;
         this.notification = notification;
-        this.handlerId = this.notification.subscribe(ALL_EVENTS,
+        this.notification.subscribe(ALL_EVENTS,
             (event: IEvent, payload: IEventPayload) => this.handleEvent(event, payload)
         );
         debug("ChatService: started");
@@ -36,6 +35,7 @@ export class ChatService implements IChatService {
      * @protected
      */
     protected async handleEvent(event: IEvent, payload: IEventPayload) {
+        debug("ChatService.handleEvent payload=" , payload)
         const message = this.getEventNotificationMessage(event, payload)
         try {
             await this.controller.sendMessage(message);
